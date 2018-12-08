@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html>
+    <head th:insert = "layout :: header"></head>
+
+    <body>
+        <div th:insert="layout::navbar" />
+        <div th:insert="layout::fb-login"/>
+
+        <div>
+            <p Welcome to Sports Watch Web Application!/>
+        </div>
+
+        <div id="status"></div>
+
+        <div class="fb-login-button"
+             scope="public_profile,email"
+             data-max-rows="1" data-size="large"
+             data-button-type="login_with"
+             data-show-faces="false"
+             data-auto-logout-link="false"
+             data-use-continue-as="false"
+             onlogin="checkLoginState()";>
+        </div>
+
+        <a href="/">
+            <img src="/img/homepage.jpg" width=100% height=20% class="d-inline-block align-top" alt="Logo">
+        </a>
+
+        <div th:insert="layout::scripts" />
+    </body>
+</html>

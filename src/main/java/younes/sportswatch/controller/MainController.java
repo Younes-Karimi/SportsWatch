@@ -27,6 +27,11 @@ public class MainController {
 
 	private int activeUserId;
 
+    @GetMapping("/")
+    public String renderHomepage(Model model){
+        return "homepage";
+    }
+
 //	@GetMapping("/")
 //	public ModelAndView renderIndex(){
 //
@@ -38,8 +43,8 @@ public class MainController {
 //		return m;
 //	}
 
-    @GetMapping("/")
-    public String renderIndex(Model model){
+    @GetMapping("/user-dashboard")
+    public String renderUserDashboard(Model model){
 
         User activeUser = userRepository.findByUserId(activeUserId);
         model.addAttribute("userName", activeUser.getUserName());
@@ -52,10 +57,10 @@ public class MainController {
         } else {
             model.addAttribute("activeUserFavoriteTeams", null);
         }
-        return "index";
+        return "user-dashboard";
     }
 
- 	@PostMapping("/save")
+ 	@PostMapping("/save-favorite-teams")
  	public String saveFavorites(@RequestParam int userId, @RequestParam String favoriteTeams){
 
         String splittedTeams[] = favoriteTeams.split(",");
@@ -71,14 +76,14 @@ public class MainController {
         for (int i = 0; i < count; i++){
             System.out.println(dbUser.getFavoriteTeams()[i]);
         }
-        return "redirect:/";
+        return "redirect:/user-dashboard";
  	}
 
-	@GetMapping(path="/sel")
+	@GetMapping(path="/select-teams")
 	public String selectFavoriteTeam(Model model){
 		model.addAttribute("teams", teamRepository.findAll());
 		model.addAttribute("userId", 1);
-	    return "sel";
+	    return "select-teams";
 	}
 
     @GetMapping(path="/add-dummy") // Map ONLY GET Requests
