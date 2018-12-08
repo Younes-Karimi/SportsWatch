@@ -11,6 +11,7 @@
     </head>
 
     <body>
+
         <!-- #### Facebook Login #### -->
         <div th:fragment="fb-login">
             <script>
@@ -87,6 +88,7 @@
             </script>
         </div>
         <!-- #### Facebook Login End #### -->
+
         <!-- #### Navigation Bar #### -->
         <div th:fragment="navbar">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -118,6 +120,15 @@
             </nav>
         </div>
         <!-- #### Navigation Bar End #### -->
+
+        <!--### Web Application Ad ###-->
+        <div th:fragment="app-ad">
+            <a href="/">
+                <img src="/img/homepage.jpg" width=100% height=20% class="d-inline-block align-top" alt="Logo">
+            </a>
+        </div>
+        <!--### Web Application Ad End ###-->
+
         <!--#### Scripts ####-->
         <div th:fragment="scripts">
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
@@ -138,6 +149,7 @@
             </script>
         </div>
         <!--#### Scripts End ####-->
+
     </body>
 </html>
 
