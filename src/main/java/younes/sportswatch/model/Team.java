@@ -1,4 +1,4 @@
-package hello;
+package younes.sportswatch.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

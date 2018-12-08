@@ -1,4 +1,4 @@
-package hello;
+package younes.sportswatch.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -7,9 +7,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 
-import hello.User;
-import hello.Team;
-import hello.UserRepository;
+import younes.sportswatch.model.User;
+import younes.sportswatch.model.Team;
+import younes.sportswatch.repository.UserRepository;
+import younes.sportswatch.repository.TeamRepository;
 import org.springframework.web.servlet.ModelAndView;
 import java.util.*;
 

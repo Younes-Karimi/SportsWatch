@@ -1,10 +1,12 @@
-package hello;
+package younes.sportswatch;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import java.util.*;
+import younes.sportswatch.model.Team;
+import younes.sportswatch.repository.TeamRepository;
 
 @SpringBootApplication
 public class Application {

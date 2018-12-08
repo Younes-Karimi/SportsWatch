@@ -1,6 +1,6 @@
-/home/younes/Downloads/SportsWatch/src/main/java/hello/Team.java
-/home/younes/Downloads/SportsWatch/src/main/java/hello/TeamRepository.java
-/home/younes/Downloads/SportsWatch/src/main/java/hello/User.java
-/home/younes/Downloads/SportsWatch/src/main/java/hello/MainController.java
-/home/younes/Downloads/SportsWatch/src/main/java/hello/Application.java
-/home/younes/Downloads/SportsWatch/src/main/java/hello/UserRepository.java
+/home/younes/Downloads/SportsWatch/src/main/java/younes/sportswatch/repository/UserRepository.java
+/home/younes/Downloads/SportsWatch/src/main/java/younes/sportswatch/model/Team.java
+/home/younes/Downloads/SportsWatch/src/main/java/younes/sportswatch/model/User.java
+/home/younes/Downloads/SportsWatch/src/main/java/younes/sportswatch/Application.java
+/home/younes/Downloads/SportsWatch/src/main/java/younes/sportswatch/repository/TeamRepository.java
+/home/younes/Downloads/SportsWatch/src/main/java/younes/sportswatch/controller/MainController.java
