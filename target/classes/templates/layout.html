@@ -89,8 +89,9 @@
         </div>
         <!-- #### Facebook Login End #### -->
 
-        <!-- #### Navigation Bar #### -->
-        <div th:fragment="navbar">
+        <!-- #### Navigation Bars #### -->
+        <!--#### General Navbar (Not logged-in ###-->
+        <div th:fragment="navbar-general">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <a class="navbar-brand" href="/">
                     <img src="img/logo.png" width="30" height="30" class="d-inline-block align-top" alt="Logo">
@@ -99,10 +100,50 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="collapse navbar-collapse" id="general-navbar">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/teams">All Teams</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/scoreboard">Scoreboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/ranking">Ranking</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/register">Register</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/user-login">User Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin-login">Admin Login</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <fb:login-button
+                            scope="public_profile,email" onlogin="checkLoginState();">
+                    </fb:login-button>
+                </div>
+            </nav>
+        </div>
+        <!--#### General Navbar (Not logged-in End ###-->
+        <!--#### User Navbar ####-->
+        <div th:fragment="navbar-user">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="/">
+                    <img src="img/logo.png" width="30" height="30" class="d-inline-block align-top" alt="Logo">
+                    Sports Watch
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="user-navbar">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
-                            <a class="nav-link" href="/user-dashboard">Home <span class="sr-only">(current)</span></a>
+                            <a class="nav-link" href="/user-dashboard">User Dashboard <span class="sr-only">(current)</span></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/select-teams">Favorite Teams</a>
@@ -128,7 +169,45 @@
                 </div>
             </nav>
         </div>
-        <!-- #### Navigation Bar End #### -->
+        <!--#### User Navbar End ####-->
+        <!--#### Admin Navbar ####-->
+        <div th:fragment="navbar-admin">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="/">
+                    <img src="img/logo.png" width="30" height="30" class="d-inline-block align-top" alt="Logo">
+                    Sports Watch
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="admin-navbar">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/admin-dashboard">Admin Dashboard <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/teams">All Teams</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/scoreboard">Scoreboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/ranking">Ranking</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <fb:login-button
+                            scope="public_profile,email" onlogin="checkLoginState();">
+                    </fb:login-button>
+                </div>
+            </nav>
+        </div>
+        <!--#### Admin Navbar End ####-->
+        <!-- #### Navigation Bars End #### -->
 
         <!--### Web Application Ad ###-->
         <div th:fragment="app-ad">

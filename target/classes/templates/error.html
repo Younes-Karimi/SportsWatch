@@ -1,0 +1,18 @@
+<!DOCTYPE HTML>
+<html>
+    <head th:replace = "layout :: header"></head>
+        <title>Error Page</title>
+    <body th:with="httpStatus=${T(org.springframework.http.HttpStatus).valueOf(#response.status)}">
+        <div th:insert="layout::navbar-general" />
+        <div th:insert="layout::fb-login"/>
+        <div th:insert="layout::app-ad" />
+
+        <div class="container">
+            <p th:text="|Error Code: ${httpStatus} - ${httpStatus.reasonPhrase}|">404</p>
+            <p th:utext="${errorMessage}">Error java.lang.NullPointerException</p>
+            <a href="homepage.html" th:href="@{/}">Back to homepage</a>
+        </div>
+
+        <div th:insert="layout::scripts" />
+    </body>
+</html>

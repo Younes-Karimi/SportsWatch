@@ -4,15 +4,13 @@
         <title>User Dashboard</title>
 
     <body>
-        <div th:insert="layout::navbar" />
+        <div th:insert="layout::navbar-user" />
         <div th:insert="layout::fb-login"/>
-
+        <div th:insert="layout::app-ad" />
         <!--<div>-->
         <!--<p th:text="'Hello ' + ${userName} +', select your favorite teams from the navigation bar'"/>-->
         <!--</div>-->
         <div id="status"></div>
-
-        <div th:insert="layout::app-ad" />
 
         <!-- #### Teams Table #### -->
         <div class="container">

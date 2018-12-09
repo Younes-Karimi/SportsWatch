@@ -8,20 +8,28 @@
         <div th:insert="layout::app-ad" />
 
         <div>
-            <p Welcome to Sports Watch Web Application!/>
+            <p>Welcome to Sports Watch Web Application!</p>
+            <p>To register for Sports Watch, login to your Facebook account using the button below.</p>
         </div>
 
         <div id="status"></div>
 
         <div class="fb-login-button"
              scope="public_profile,email"
-             data-max-rows="1" data-size="large"
+             data-max-rows="1"
+             data-size="large"
              data-button-type="login_with"
              data-show-faces="false"
-             data-auto-logout-link="false"
+             data-auto-logout-link="true"
              data-use-continue-as="false"
              onlogin="checkLoginState()";>
         </div>
+
+        <form th:action="@{~/register}" method="POST" id="register-form">
+            <input type="hidden" name="userId" id="userId">
+            <input type="hidden" name="userName" id="userName">
+            <input type="hidden" name="email" id="email">
+        </form>
 
         <div th:insert="layout::scripts" />
     </body>

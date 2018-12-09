@@ -1,13 +1,14 @@
 <!DOCTYPE HTML>
 <html>
     <head th:replace = "layout :: header"></head>
-
+        <title>Login</title>
     <body>
         <div th:insert="layout::navbar" />
         <div th:insert="layout::fb-login"/>
+        <div th:insert="layout::app-ad" />
 
         <div>
-            <p Welcome to Sports Watch Web Application!/>
+            <p Please login using the button below./>
         </div>
 
         <div id="status"></div>
@@ -22,7 +23,19 @@
              onlogin="checkLoginState()";>
         </div>
 
-        <div th:insert="layout::app-ad" />
+        <form th:action="@{~/login}" method="POST" id="login-form">
+            <input type="hidden" name="userID" id="userID">
+            <input type="hidden" name="userName" id="userName">
+            <input type="hidden" name="email" id="email">
+        </form>
+
+        <div>
+            <p Have not registered to Sports Watch?/>
+            <a href="/sign-up">Register Now!</a>
+        </div>
+
+
+
         <div th:insert="layout::scripts" />
     </body>
 </html>

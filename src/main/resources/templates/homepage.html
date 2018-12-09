@@ -3,8 +3,9 @@
     <head th:replace = "layout :: header"></head>
 
     <body>
-        <div th:insert="layout::navbar" />
+        <div th:insert="layout::navbar-general" />
         <div th:insert="layout::fb-login"/>
+        <div th:insert="layout::app-ad" />
 
         <div>
             <p Welcome to Sports Watch Web Application!/>
@@ -22,7 +23,6 @@
              onlogin="checkLoginState()";>
         </div>
 
-        <div th:insert="layout::app-ad" />
         <div th:insert="layout::scripts" />
     </body>
 </html>

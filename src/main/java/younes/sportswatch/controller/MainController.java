@@ -18,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.servlet.http.HttpSession;
 import java.util.*;
 import java.io.IOException;
 import younes.sportswatch.model.User;
@@ -41,6 +42,47 @@ public class MainController {
     @GetMapping("/")
     public String renderHomepage(Model model){
         return "homepage";
+    }
+
+//    User Management ####
+    @GetMapping("/admin-login")
+    public String renderAdminLogin(Model model){
+        return "admin-login";
+    }
+
+
+    @GetMapping("/register")
+    public ModelAndView renderRegisteration(HttpSession session) {
+        return new ModelAndView("register");
+    }
+
+    @PostMapping("/register")
+    public ModelAndView registerUser(
+            @RequestParam("userId") int userId,
+            @RequestParam("userName") String userName,
+            @RequestParam("email") String email
+    ) {
+        System.out.println("registered!!!!!!!!!!!!111111");
+        if (!userRepository.findByEmail(email).isPresent()) {
+            System.out.println("registered!!!!!!!!!!!!22222");
+
+            User newUser = new User(userId, userName, email);
+            System.out.println("registered!!!!!!!!!!!!33333");
+
+            userRepository.save(newUser);
+            return new ModelAndView("redirect:user-login");
+        }
+        return new ModelAndView("redirect:user-login");
+    }
+
+    @GetMapping("/user-login")
+    public String renderUserLogin(Model model){
+        return "user-login";
+    }
+
+    @GetMapping("/logout")
+    public String renderLogout(Model model){
+        return "logout";
     }
 
     @GetMapping("/user-dashboard")
@@ -89,7 +131,7 @@ public class MainController {
     @GetMapping(path="/add-dummy") // Map ONLY GET Requests
     public String addDummyStuff () {
 
-        User activeUser = new User("Younes","ykarimi@albany.com");
+        User activeUser = new User(0, "Younes","ykarimi@albany.com");
         userRepository.save(activeUser);
         activeUserId = activeUser.getUserId();
 
@@ -108,7 +150,7 @@ public class MainController {
 	}
 
 
-//	#### Teams API ####
+    //#### Teams API ####
     //Using PoJo Classes
     @GetMapping("/teams")
     public ModelAndView getTeams() {
@@ -119,7 +161,6 @@ public class MainController {
         String url ="https://api.mysportsfeeds.com/v1.2/pull/nba/2018-2019-regular/overall_team_standings.json";
         //Encode Username and Password
         String encoding = Base64.getEncoder().encodeToString("95aecd0b-7284-4bd4-8a0d-336b1f:I9t3kMuslj@9q8Rr".getBytes());
-        // TOKEN:PASS
         //Add headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -137,6 +178,7 @@ public class MainController {
         return showTeams;
     }
 
+    //#### Show Team Profile ####
     //Using objectMapper
     @GetMapping("/team")
     public ModelAndView getTeamInfo(
@@ -152,8 +194,6 @@ public class MainController {
         headers.set("Authorization", "Basic "+encoding);
         HttpEntity<String> request = new HttpEntity<String>(headers);
 
-
-
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
         String str = response.getBody();
@@ -161,13 +201,11 @@ public class MainController {
         try {
             JsonNode root = mapper.readTree(str);
             System.out.println(str);
-            //JsonNode jsonNode1 = actualObj.get("lastUpdatedOn");
             System.out.println(root.get("teamgamelogs").get("lastUpdatedOn").asText());
             System.out.println(root.get("teamgamelogs").get("gamelogs").getNodeType());
             JsonNode gamelogs = root.get("teamgamelogs").get("gamelogs");
 
             if(gamelogs.isArray()) {
-
                 gamelogs.forEach(gamelog -> {
                     JsonNode game = gamelog.get("game");
                     HashMap<String,String> gameDetail = new HashMap<String, String>();
@@ -183,13 +221,108 @@ public class MainController {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
         teamInfo.addObject("gameDetails", gameDetails);
-
         return teamInfo;
     }
-//    #### Teams API End ####
 
+    @GetMapping("/ranking")
+    public ModelAndView showRanking() {
+        ModelAndView showRanking = new ModelAndView("ranking");
+        String url ="https://api.mysportsfeeds.com/v1.2/pull/nba/2018-2019-regular/overall_team_standings.json";
+        String encoding = Base64.getEncoder().encodeToString("95aecd0b-7284-4bd4-8a0d-336b1f:I9t3kMuslj@9q8Rr".getBytes());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Basic " + encoding);
+        HttpEntity<String> request = new HttpEntity<>(headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
+        String str = response.getBody();
+        ObjectMapper mapper = new ObjectMapper();
+
+        ArrayList<HashMap<String, String>> rankings = new ArrayList<>();
+        try {
+            JsonNode root = mapper.readTree(str);
+            JsonNode overallTeamStandings = root.get("overallteamstandings").get("teamstandingsentry");
+            if (overallTeamStandings.isArray()) {
+                overallTeamStandings.forEach(teamDetails -> {
+                            JsonNode team = teamDetails.get("team");
+                            JsonNode rank = teamDetails.get("rank");
+                            HashMap<String,String> teamDetail = new HashMap<>();
+                            teamDetail.put("ID",team.get("ID").asText());
+                            teamDetail.put("City",team.get("City").asText());
+                            teamDetail.put("Name",team.get("Name").asText());
+                            teamDetail.put("Abbreviation",team.get("Abbreviation").asText());
+                            teamDetail.put("rank", rank.asText());
+                            rankings.add(teamDetail);
+                        }
+                );
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        showRanking.addObject("rankings", rankings);
+        return showRanking;
+    }
+    //#### Show Team Profile End ####
+
+    //####Scoreboard ####
+    @GetMapping("/scoreboard")
+    public ModelAndView showScoreboard() {
+
+        String forDate = "20181207";
+        String url = "https://api.mysportsfeeds.com/v1.2/pull/nba/2018-2019-regular/scoreboard.json?fordate=" + forDate;
+        String encoding = Base64.getEncoder().encodeToString("95aecd0b-7284-4bd4-8a0d-336b1f:I9t3kMuslj@9q8Rr".getBytes());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Basic " + encoding);
+        HttpEntity<String> request = new HttpEntity<>(headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
+        String str = response.getBody();
+        ObjectMapper mapper = new ObjectMapper();
+        ArrayList<HashMap<String, String>> gameDetails = new ArrayList<>();
+        try {
+            JsonNode root = mapper.readTree(str);
+            JsonNode gameScores = root.get("scoreboard").get("gameScore");
+            if (gameScores.isArray()) {
+                gameScores.forEach(gameLog -> {
+                    JsonNode game = gameLog.get("game");
+                    HashMap<String, String> gameDetail = new HashMap<>();
+                    gameDetail.put("date", game.get("date").asText());
+                    gameDetail.put("time", game.get("time").asText());
+                    gameDetail.put("awayTeam", game.get("awayTeam").get("Abbreviation").asText());
+                    gameDetail.put("homeTeam", game.get("homeTeam").get("Abbreviation").asText());
+                    gameDetail.put("location", game.get("location").asText());
+                    if (gameLog.get("isUnplayed").asBoolean()) {
+                        gameDetail.put("homeScore", "0");
+                        gameDetail.put("awayScore", "0");
+                        gameDetail.put("status", "Unplayed");
+                    } else {
+                        gameDetail.put("homeScore", gameLog.get("homeScore").asText());
+                        gameDetail.put("awayScore", gameLog.get("awayScore").asText());
+                        if (gameLog.get("isInProgress").asBoolean()) {
+                            gameDetail.put("status", "In-progress");
+                        } else gameDetail.put("status", "Completed");
+                    }
+                    gameDetails.add(gameDetail);
+                });
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ModelAndView scoreboard = new ModelAndView("scoreboard");
+        scoreboard.addObject("scoreboard", gameDetails);
+        return scoreboard;
+    }
+    //#### Scoreboard End ####
+
+    //#### Teams API End ####
 
 
 
