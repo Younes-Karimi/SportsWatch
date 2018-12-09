@@ -118,7 +118,7 @@ public class MainController {
         //Endpoint to call
         String url ="https://api.mysportsfeeds.com/v1.2/pull/nba/2018-2019-regular/overall_team_standings.json";
         //Encode Username and Password
-        String encoding = Base64.getEncoder().encodeToString("581f5037-d4ed-4478-a976-91442e:2rbLd9MORLPc".getBytes());
+        String encoding = Base64.getEncoder().encodeToString("95aecd0b-7284-4bd4-8a0d-336b1f:I9t3kMuslj@9q8Rr".getBytes());
         // TOKEN:PASS
         //Add headers
         HttpHeaders headers = new HttpHeaders();
@@ -145,7 +145,7 @@ public class MainController {
         ModelAndView teamInfo = new ModelAndView("team-info");
         ArrayList<HashMap<String, String>> gameDetails = new ArrayList<HashMap<String, String>>();
         String url = "https://api.mysportsfeeds.com/v1.2/pull/nba/2018-2019-regular/team_gamelogs.json?team=" + teamID;
-        String encoding = Base64.getEncoder().encodeToString("581f5037-d4ed-4478-a976-91442e:2rbLd9MORLPc".getBytes());
+        String encoding = Base64.getEncoder().encodeToString("95aecd0b-7284-4bd4-8a0d-336b1f:I9t3kMuslj@9q8Rr".getBytes());
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

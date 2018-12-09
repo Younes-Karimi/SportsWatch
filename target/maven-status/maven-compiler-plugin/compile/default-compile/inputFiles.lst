@@ -3,4 +3,5 @@
 /home/younes/Downloads/SportsWatch/src/main/java/younes/sportswatch/model/Team.java
 /home/younes/Downloads/SportsWatch/src/main/java/younes/sportswatch/model/User.java
 /home/younes/Downloads/SportsWatch/src/main/java/younes/sportswatch/repository/TeamRepository.java
+/home/younes/Downloads/SportsWatch/src/main/java/younes/sportswatch/controller/NBATeamStanding.java
 /home/younes/Downloads/SportsWatch/src/main/java/younes/sportswatch/controller/MainController.java
