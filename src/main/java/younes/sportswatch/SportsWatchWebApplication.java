@@ -4,19 +4,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestOperations;
 import java.util.*;
 import younes.sportswatch.model.Team;
 import younes.sportswatch.repository.TeamRepository;
 
 @SpringBootApplication
-public class Application {
+public class SportsWatchWebApplication {
 
     @Autowired
     private TeamRepository teamRepository;
 
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(SportsWatchWebApplication.class, args);
     }
 
     public void run(String... args) {
