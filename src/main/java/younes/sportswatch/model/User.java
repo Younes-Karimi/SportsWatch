@@ -4,17 +4,25 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import org.springframework.beans.factory.annotation.Autowired;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import java.util.*;
+import younes.sportswatch.model.Team;
 
-@Data
 @Entity // This tells Hibernate to make a table out of this class
+@Data
 public class User {
+
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private int userId;
     private String userName;
     private String email;
-    private int[] favoriteTeams;
+    private Boolean isBlocked;
+    private Boolean isAdmin;
+    private ArrayList<Integer> favoriteTeams;
 
     public User(){}
 
@@ -22,39 +30,16 @@ public class User {
         this.userId = userId;
         this.userName = userName;
         this.email = email;
+        this.isBlocked = false;
+        this.isAdmin = false;
     }
 
-//	public int getUserId() {
-//		return userId;
-//	}
+//    public boolean getIsAdmin(){
+//        return isAdmin;
+//    }
 //
-//	public void setUserId(int userId) {
-//		this.userId = userId;
-//	}
-//
-//	public String getUserName() {
-//		return userName;
-//	}
-//
-//	public void setUserName(String userName) {
-//		this.userName = userName;
-//	}
-//
-//	public String getEmail() {
-//		return email;
-//	}
-//
-//	public void setEmail(String email) {
-//		this.email = email;
-//	}
-//
-//	public int[] getFavoriteTeams() {
-//		return favoriteTeams;
-//	}
-//
-//	public void setFavoriteTeams(int[] favoriteTeams) {
-//		this.favoriteTeams = favoriteTeams;
-//	}
-    
+//    public void setIsAdmin(boolean isAdmin){
+//        this.isAdmin = isAdmin;
+//    }
 }
 

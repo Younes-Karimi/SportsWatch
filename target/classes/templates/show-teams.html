@@ -5,16 +5,15 @@
     <body>
         <div th:insert="layout::navbar-general" />
         <div th:insert="layout::fb-login"/>
+        <div th:insert="layout::app-ad" />
 
         <div>
             <p Welcome to Sports Watch Web Application!/>
         </div>
 
         <div id="status"></div>
-        <div th:insert="layout::app-ad" />
 
         <div class="container">
-            <!--<p th:text="'Hello, ' + ${name} + '!'" />-->
             <h4>All NBA Teams:</h4>
             <table class="table">
                 <thead>

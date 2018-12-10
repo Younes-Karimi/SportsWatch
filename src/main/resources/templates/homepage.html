@@ -8,20 +8,23 @@
         <div th:insert="layout::app-ad" />
 
         <div>
-            <p Welcome to Sports Watch Web Application!/>
+            <p>Welcome to Sports Watch Web Application! Please login to get access to all the features</p>
         </div>
 
         <div id="status"></div>
 
+        <!--#### Facebook Large Button ####-->
         <div class="fb-login-button"
              scope="public_profile,email"
-             data-max-rows="1" data-size="large"
+             data-max-rows="1"
+             data-size="large"
              data-button-type="login_with"
              data-show-faces="false"
-             data-auto-logout-link="false"
+             data-auto-logout-link="true"
              data-use-continue-as="false"
              onlogin="checkLoginState()";>
         </div>
+        <!--#### Facebook Large Button End ####-->
 
         <div th:insert="layout::scripts" />
     </body>

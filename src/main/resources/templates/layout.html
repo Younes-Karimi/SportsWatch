@@ -124,7 +124,9 @@
                 </div>
                 <div>
                     <fb:login-button
-                            scope="public_profile,email" onlogin="checkLoginState();">
+                            scope="public_profile,email"
+                            data-auto-logout-link="true"
+                            onlogin="checkLoginState();">
                     </fb:login-button>
                 </div>
             </nav>
@@ -237,20 +239,10 @@
             </script>
         </div>
         <!--#### Scripts End ####-->
-
     </body>
 </html>
 
-<!--Large FB Button-->
-<!--<div class="fb-login-button"-->
-<!--scope="public_profile,email"-->
-<!--data-max-rows="1" data-size="large"-->
-<!--data-button-type="login_with"-->
-<!--data-show-faces="false"-->
-<!--data-auto-logout-link="false"-->
-<!--data-use-continue-as="false"-->
-<!--onlogin="checkLoginState()";>-->
-<!--</div>-->
+
 
 
 

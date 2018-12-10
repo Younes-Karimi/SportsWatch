@@ -38,18 +38,44 @@ public class MainController {
 	private TeamRepository teamRepository;
 
 	private int activeUserId;
+	private String tokenPass = "95aecd0b-7284-4bd4-8a0d-336b1f:I9t3kMuslj@9q8Rr";
 
     @GetMapping("/")
     public String renderHomepage(Model model){
         return "homepage";
     }
 
-//    User Management ####
+    //#### User Management ####
     @GetMapping("/admin-login")
-    public String renderAdminLogin(Model model){
-        return "admin-login";
+    public ModelAndView renderAdminLogin(HttpSession session) {
+        if (session.getAttribute("email") != null) {
+            String currentUserEmail = session.getAttribute("email").toString();
+            if (userRepository.findByEmail(currentUserEmail).isPresent()) {
+                if (userRepository.findByEmail(currentUserEmail).get().getIsAdmin()) {
+                    return new ModelAndView("redirect:admin-dashboard");
+                }
+            }
+        }
+        return new ModelAndView("admin-login");
     }
 
+    @PostMapping("/admin-login")
+    public ModelAndView adminlogin(
+            @RequestParam("userName") String userName,
+            @RequestParam("email") String email,
+            HttpSession session,
+            Model model
+    ) {
+        if(userRepository.findByEmail(email).isPresent()) {
+            if (userRepository.findByEmail(email).get().getIsAdmin()) {
+                session.setAttribute("email", email);
+                return new ModelAndView("redirect:admin-dashboard");
+            }
+        }
+        String errorMessage = userName + " is not defined as an admin! You can login as a user.";
+        model.addAttribute("errorMessage", errorMessage);
+        return new ModelAndView("error");
+    }
 
     @GetMapping("/register")
     public ModelAndView renderRegisteration(HttpSession session) {
@@ -75,14 +101,38 @@ public class MainController {
         return new ModelAndView("redirect:user-login");
     }
 
+    // #### User Login ####
     @GetMapping("/user-login")
-    public String renderUserLogin(Model model){
-        return "user-login";
+    public ModelAndView renderUserLogin(HttpSession session) {
+        if (session.getAttribute("email") != null) {
+            String currentUserEmail = session.getAttribute("email").toString();
+            if (userRepository.findByEmail(currentUserEmail).isPresent()) {
+                return new ModelAndView("redirect:user-dashboard");
+            }
+        }
+        return new ModelAndView("user-login");
     }
 
+    @PostMapping("/user-login")
+    public ModelAndView userLoginrequest(
+            @RequestParam("email") String email,
+            HttpSession session,
+            Model model
+    ) {
+        if(userRepository.findByEmail(email).isPresent()) {
+            session.setAttribute("email", email);
+            return new ModelAndView("redirect:user-dashboard");
+        }
+        String errorMessage = "You have not registered into Sports Watch. You have to register before login.";
+        model.addAttribute("errorMessage", errorMessage);
+        return new ModelAndView("error");
+    }
+    // #### User Login End ####
+
     @GetMapping("/logout")
-    public String renderLogout(Model model){
-        return "logout";
+    public ModelAndView renderLogout(HttpSession session) {
+        session.removeAttribute("email");
+        return new ModelAndView("redirect:");
     }
 
     @GetMapping("/user-dashboard")
@@ -102,24 +152,24 @@ public class MainController {
         return "user-dashboard";
     }
 
- 	@PostMapping("/save-favorite-teams")
- 	public String saveFavorites(@RequestParam int userId, @RequestParam String favoriteTeams){
-
-        String splittedTeams[] = favoriteTeams.split(",");
-        int teamIDs[] = new int[splittedTeams.length];
-        for (int i = 0; i < teamIDs.length; i++){
-            teamIDs[i] = Integer.parseInt(splittedTeams[i]);
-            System.out.println(teamIDs[i]);
-        }
- 		User dbUser = userRepository.findByUserId(userId);
-        dbUser.setFavoriteTeams(teamIDs);
-        userRepository.save(dbUser);
-        int count = dbUser.getFavoriteTeams().length;
-        for (int i = 0; i < count; i++){
-            System.out.println(dbUser.getFavoriteTeams()[i]);
-        }
-        return "redirect:/user-dashboard";
- 	}
+// 	@PostMapping("/save-favorite-teams")
+// 	public String saveFavorites(@RequestParam int userId, @RequestParam String favoriteTeams){
+//
+//        String splittedTeams[] = favoriteTeams.split(",");
+//        int teamIDs[] = new int[splittedTeams.length];
+//        for (int i = 0; i < teamIDs.length; i++){
+//            teamIDs[i] = Integer.parseInt(splittedTeams[i]);
+//            System.out.println(teamIDs[i]);
+//        }
+// 		User dbUser = userRepository.findByUserId(userId);
+//        dbUser.setFavoriteTeams(teamIDs);
+//        userRepository.save(dbUser);
+//        int count = dbUser.getFavoriteTeams().length;
+//        for (int i = 0; i < count; i++){
+//            System.out.println(dbUser.getFavoriteTeams()[i]);
+//        }
+//        return "redirect:/user-dashboard";
+// 	}
 
 	@GetMapping(path="/select-teams")
 	public String selectFavoriteTeam(Model model){
@@ -149,7 +199,6 @@ public class MainController {
 		return userRepository.findAll();
 	}
 
-
     //#### Teams API ####
     //Using PoJo Classes
     @GetMapping("/teams")
@@ -160,7 +209,7 @@ public class MainController {
         //Endpoint to call
         String url ="https://api.mysportsfeeds.com/v1.2/pull/nba/2018-2019-regular/overall_team_standings.json";
         //Encode Username and Password
-        String encoding = Base64.getEncoder().encodeToString("95aecd0b-7284-4bd4-8a0d-336b1f:I9t3kMuslj@9q8Rr".getBytes());
+        String encoding = Base64.getEncoder().encodeToString(tokenPass.getBytes());
         //Add headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -187,7 +236,7 @@ public class MainController {
         ModelAndView teamInfo = new ModelAndView("team-info");
         ArrayList<HashMap<String, String>> gameDetails = new ArrayList<HashMap<String, String>>();
         String url = "https://api.mysportsfeeds.com/v1.2/pull/nba/2018-2019-regular/team_gamelogs.json?team=" + teamID;
-        String encoding = Base64.getEncoder().encodeToString("95aecd0b-7284-4bd4-8a0d-336b1f:I9t3kMuslj@9q8Rr".getBytes());
+        String encoding = Base64.getEncoder().encodeToString(tokenPass.getBytes());
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -213,6 +262,8 @@ public class MainController {
                     gameDetail.put("date", game.get("date").asText());
                     gameDetail.put("time", game.get("time").asText());
                     gameDetail.put("awayTeam", game.get("awayTeam").get("Abbreviation").asText());
+                    gameDetail.put("wins", gamelog.get("stats").get("Wins").get("#text").asText());
+                    gameDetail.put("losses", gamelog.get("stats").get("Losses").get("#text").asText());
                     gameDetails.add(gameDetail);
 
                 });
@@ -222,6 +273,7 @@ public class MainController {
             e.printStackTrace();
         }
         teamInfo.addObject("gameDetails", gameDetails);
+        teamInfo.addObject("teamDetails", teamRepository.findByTeamId(Integer.parseInt(teamID)));
         return teamInfo;
     }
 
@@ -229,7 +281,7 @@ public class MainController {
     public ModelAndView showRanking() {
         ModelAndView showRanking = new ModelAndView("ranking");
         String url ="https://api.mysportsfeeds.com/v1.2/pull/nba/2018-2019-regular/overall_team_standings.json";
-        String encoding = Base64.getEncoder().encodeToString("95aecd0b-7284-4bd4-8a0d-336b1f:I9t3kMuslj@9q8Rr".getBytes());
+        String encoding = Base64.getEncoder().encodeToString(tokenPass.getBytes());
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -274,7 +326,7 @@ public class MainController {
 
         String forDate = "20181207";
         String url = "https://api.mysportsfeeds.com/v1.2/pull/nba/2018-2019-regular/scoreboard.json?fordate=" + forDate;
-        String encoding = Base64.getEncoder().encodeToString("95aecd0b-7284-4bd4-8a0d-336b1f:I9t3kMuslj@9q8Rr".getBytes());
+        String encoding = Base64.getEncoder().encodeToString(tokenPass.getBytes());
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -323,6 +375,22 @@ public class MainController {
     //#### Scoreboard End ####
 
     //#### Teams API End ####
+
+//    #### Helper Functions ####
+//    #### Fetch list of favorite teams using teams ID ####
+    public ArrayList<Team> fetchFavoriteTeams(ArrayList<Integer> favoriteTeams) {
+        ArrayList<Team> teams = new ArrayList<>();
+        if (favoriteTeams != null) {
+            for (Integer i : favoriteTeams) {
+                teams.add(teamRepository.findByTeamId(i));
+            }
+            return teams;
+        }
+        return teams;
+    }
+//    #### Fetch Favorite Teams End ####
+
+
 
 
 
