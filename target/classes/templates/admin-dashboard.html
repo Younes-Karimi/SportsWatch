@@ -1,28 +1,39 @@
 <!DOCTYPE HTML>
 <html>
     <head th:replace = "layout :: header"></head>
-
+        <title>Admin Dashboard</title>
     <body>
         <div th:insert="layout::navbar-admin" />
         <div th:insert="layout::fb-login"/>
-
-        <div>
-            <p Welcome to Sports Watch Web Application!/>
-        </div>
-
-        <div id="status"></div>
-
-        <div class="fb-login-button"
-             scope="public_profile,email"
-             data-max-rows="1" data-size="large"
-             data-button-type="login_with"
-             data-show-faces="false"
-             data-auto-logout-link="false"
-             data-use-continue-as="false"
-             onlogin="checkLoginState()";>
-        </div>
-
         <div th:insert="layout::app-ad" />
+
+        <div class="container">
+            <h2>All Registered Users</h2>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Block</th>
+                </tr>
+                </thead>
+                <tr th:each="user,iterStat : ${allUsers}" >
+                    <td th:text="${user.userId}"></td>
+                    <td th:text="${user.userName}" ></td>
+                    <td th:text="${user.email}" ></td>
+                    <td th:text="${user.isBlocked} ? 'Blocked':'Active'" ></td>
+                    <td><a th:href="@{/toggle-user-status(email=${user.email})}"
+                           th:text="${user.isBlocked} ? 'Activate':'Block'"
+                           class="btn btn-primary">
+                        </a>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
         <div th:insert="layout::scripts" />
     </body>
 </html>

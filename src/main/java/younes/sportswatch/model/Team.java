@@ -15,6 +15,8 @@ public class Team {
     private String teamName;
     private String city;
     private String abbreviation;
+    private int numOfWins;
+    private int numOfLosses;
 
     public Team() {}
 

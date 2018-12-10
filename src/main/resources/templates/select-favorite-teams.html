@@ -17,10 +17,13 @@
         <div class="container">
             <h2>Choose your favorite teams from the list below:</h2>
             <form id="select-favorite-teams" method="post">
-                <select class="js-example-basic-multiple" name="formData" multiple="multiple" style="width: 60%">
-                    <option th:each="t : ${teams}" th:value="${t.teamId}" th:text="${t.City} + ' ' + ${t.teamName}"></option>
+                <select class="js-example-basic-multiple" name="favoriteTeamsString" multiple="multiple" style="width: 60%">
+                    <option th:each="team : ${allTeams}"
+                            th:value="${team.teamId}"
+                            th:text="${team.city} + ' ' + ${team.teamName}">
+                    </option>
                 </select>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Update Favorite Teams</button>
             </form>
         </div>
 

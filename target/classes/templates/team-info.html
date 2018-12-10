@@ -53,7 +53,7 @@
                     </tr>
                     </thead>
                     <tr th:each="gameDetail,iterStat : ${gameDetails}" >
-                        <td th:text="${gameDetail.get('wins')} == 1 ? 'Win' : 'Loss'"></td>
+                        <td th:text="${gameDetail.get('Wins')} ? 'Win' : 'Loss'"></td>
                         <td th:text="${gameDetail.get('awayTeam')}" > </td>
                         <td th:text="${gameDetail.get('date')}" >  </td>
                         <td th:text="${gameDetail.get('time')}" >  </td>
