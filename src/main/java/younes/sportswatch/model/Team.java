@@ -6,11 +6,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.Data;
 
-@Data
 @Entity // This tells Hibernate to make a table out of this class
+@Data
 public class Team {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+//    @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer teamId;
     private String teamName;
     private String city;
@@ -18,8 +18,10 @@ public class Team {
 
     public Team() {}
 
-    public Team(String name, String abbreviation) {
-        this.teamName = name;
+    public Team(Integer teamId, String teamName, String city, String abbreviation) {
+        this.teamId = teamId;
+        this.teamName = teamName;
+        this.city = city;
         this.abbreviation = abbreviation;
     }
 

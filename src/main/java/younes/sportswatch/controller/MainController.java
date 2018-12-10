@@ -42,6 +42,8 @@ public class MainController {
 
     @GetMapping("/")
     public String renderHomepage(Model model){
+        loadUsers();
+        loadTeams();
         return "homepage";
     }
 
@@ -171,27 +173,32 @@ public class MainController {
 //        return "redirect:/user-dashboard";
 // 	}
 
+
 	@GetMapping(path="/select-teams")
 	public String selectFavoriteTeam(Model model){
+
 		model.addAttribute("teams", teamRepository.findAll());
 		model.addAttribute("userId", 1);
 	    return "select-teams";
 	}
 
-    @GetMapping(path="/add-dummy") // Map ONLY GET Requests
-    public String addDummyStuff () {
-
-        User activeUser = new User(0, "Younes","ykarimi@albany.com");
-        userRepository.save(activeUser);
-        activeUserId = activeUser.getUserId();
-
-        List<Team> teams =  new ArrayList<>();
-        teams.add(new Team("Washington Wizards", "WAS"));
-        teams.add(new Team("Miami Heat", "MIA"));
-        teams.add(new Team("Los Angeles Clippers", "LAC"));
-        teamRepository.saveAll(teams);
-        return "redirect:/";
-    }
+//    @GetMapping(path="/add-dummy") // Map ONLY GET Requests
+//    public String addDummyStuff () {
+//
+//        loadTeams();
+//        loadUsers();
+//
+////        User activeUser = new User(0, "Younes","ykarimi@albany.com");
+////        userRepository.save(activeUser);
+////        activeUserId = activeUser.getUserId();
+////
+////        List<Team> teams =  new ArrayList<>();
+////        teams.add(new Team("Washington Wizards", "WAS"));
+////        teams.add(new Team("Miami Heat", "MIA"));
+////        teams.add(new Team("Los Angeles Clippers", "LAC"));
+////        teamRepository.saveAll(teams);
+//        return "redirect:/";
+//    }
 	
 	@GetMapping(path="/all")
 	public @ResponseBody Iterable<User> getAllUsers() {
@@ -390,6 +397,57 @@ public class MainController {
     }
 //    #### Fetch Favorite Teams End ####
 
+    //#### Add Dummy Data ####
+    private void loadTeams(){
+        System.out.println("QQQQQQQQQQQQQQQQQQQLoading teams");
+        String url ="https://api.mysportsfeeds.com/v1.2/pull/nba/2018-2019-regular/overall_team_standings.json";
+        String encoding = Base64.getEncoder().encodeToString(tokenPass.getBytes());
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Basic " + encoding);
+        HttpEntity<String> request = new HttpEntity<>(headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
+        String str = response.getBody();
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            JsonNode root = mapper.readTree(str);
+            JsonNode teamstandings = root.get("overallteamstandings").get("teamstandingsentry");
+            if (teamstandings.isArray()) {
+                teamstandings.forEach(teamDetails -> {
+                    JsonNode teamInfo = teamDetails.get("team");
+                    Team team = new Team();
+                    team.setTeamId(Integer.parseInt(teamInfo.get("ID").asText()));
+                    team.setTeamName(teamInfo.get("Name").asText());
+                    team.setCity(teamInfo.get("City").asText());
+                    team.setAbbreviation(teamInfo.get("Abbreviation").asText());
+                    System.out.println(team.getTeamId() + team.getTeamName() + team.getCity() + team.getAbbreviation());
+                    teamRepository.save(team);
+                });
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadUsers(){
+        User admin1 = new User(0, "admin1", "admin1@gmail.com");
+        admin1.setIsAdmin(true);
+        userRepository.save(admin1);
+
+        User admin2 = new User(1, "admin2", "admin2@gmail.com");
+        admin2.setIsAdmin(true);
+        userRepository.save(admin2);
+
+        User user1 = new User(2, "user1", "user1@gmail.com");
+        userRepository.save(user1);
+
+        User user2 = new User(2, "user2", "user2@gmail.com");
+        userRepository.save(user2);
+    }
+    //#### Add Dummy Data End ####
 
 
 

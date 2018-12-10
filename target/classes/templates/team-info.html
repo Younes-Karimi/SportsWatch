@@ -14,15 +14,16 @@
 
         <div class="container">
 
-            <h4>Team: <span th:text="${teamDetails.City} +' ' + ${teamDetails.teamName}"></span></h4>
-                <img th:src="@{'/img/teams/' + ${teamDetails.abbreviation} + '.png'}"/>
+            <h1><b><i>Team: <span th:text="${teamDetails.teamName} +' (' + ${teamDetails.abbreviation} + ')'"></span></i></b></h1>
+            <h2><b><i>From: <span th:text="${teamDetails.city}"></span></i></b></h2>
+            <img th:src="@{'/img/teams/' + ${teamDetails.abbreviation} + '.png'}"/>
 
-            <!--<div>-->
-                <!--<p>Click the button below to add this team to your favorite teams</p>-->
-                <!--<a class="btn btn-primary" th:href="@{~/add-to-favorites?id=} + ${teamDetails.id}">Add to Favorites</a>-->
-            <!--</div>-->
+            <div>
+                <p>Click the button below to add this team to your favorite teams</p>
+                <a class="btn btn-primary" th:href="@{~/add-to-favorites?id=} + ${teamDetails.teamId}">Add to Favorites</a>
+            </div>
 
-            <p>Schedules of games for the latest season</p>
+            <h2>Schedules of games for the latest season</h2>
             <table class="table">
                 <thead>
                 <tr>
@@ -41,27 +42,23 @@
             </table>
 
             <div>
-                <h4>Team: <span th:text="${teamDetails.City} +' ' + ${teamDetails.teamName}"></span></h3>
-                    <img th:src="@{'/img/teamlogos/' + ${teamDetails.abbreviation} + '.png'}"/>
-                    <div>
-                        <p>Wins and Losses of this team</p>
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th scope="col">Record</th>
-                                <th scope="col">VS. Team</th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Time</th>
-                            </tr>
-                            </thead>
-                            <tr th:each="gameDetail,iterStat : ${gameDetails}" >
-                                <td th:text="${gameDetail.get('wins')} == 1 ? 'Win' : 'Loss'"></td>
-                                <td th:text="${gameDetail.get('awayTeam')}" > </td>
-                                <td th:text="${gameDetail.get('date')}" >  </td>
-                                <td th:text="${gameDetail.get('time')}" >  </td>
-                            </tr>
-                        </table>
-                    </div>
+                <h2>Wins and Losses of this team</h2>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Record</th>
+                        <th scope="col">VS. Team</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Time</th>
+                    </tr>
+                    </thead>
+                    <tr th:each="gameDetail,iterStat : ${gameDetails}" >
+                        <td th:text="${gameDetail.get('wins')} == 1 ? 'Win' : 'Loss'"></td>
+                        <td th:text="${gameDetail.get('awayTeam')}" > </td>
+                        <td th:text="${gameDetail.get('date')}" >  </td>
+                        <td th:text="${gameDetail.get('time')}" >  </td>
+                    </tr>
+                </table>
             </div>
         </div>
 

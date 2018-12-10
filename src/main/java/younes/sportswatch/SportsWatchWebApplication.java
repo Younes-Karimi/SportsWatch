@@ -55,9 +55,9 @@ public class SportsWatchWebApplication {
 
         try {
             JsonNode root = mapper.readTree(str);
-            JsonNode unwrappedRoot = root.get("overallteamstandings").get("teamstandingsentry");
-            if (unwrappedRoot.isArray()) {
-                unwrappedRoot.forEach(teamDetails -> {
+            JsonNode teamstandings = root.get("overallteamstandings").get("teamstandingsentry");
+            if (teamstandings.isArray()) {
+                teamstandings.forEach(teamDetails -> {
                     JsonNode teamInfo = teamDetails.get("team");
                     Team team = new Team();
                     team.setTeamId(Integer.parseInt(teamInfo.get("ID").asText()));
@@ -74,11 +74,11 @@ public class SportsWatchWebApplication {
 
     private void loadUsers(){
         User admin1 = new User(0, "admin1", "admin1@gmail.com");
-        admin.setIsAdmin(true);
-        userRepository.save(admin);
+        admin1.setIsAdmin(true);
+        userRepository.save(admin1);
 
         User admin2 = new User(1, "admin2", "admin2@gmail.com");
-        testAdmin.setIsAdmin(true);
+        admin2.setIsAdmin(true);
         userRepository.save(admin2);
 
         User user1 = new User(2, "user1", "user1@gmail.com");
