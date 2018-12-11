@@ -1,5 +1,6 @@
 younes/sportswatch/controller/MainController.class
 younes/sportswatch/model/Team.class
+younes/sportswatch/DummySeeder.class
 younes/sportswatch/controller/team.class
 younes/sportswatch/model/User.class
 younes/sportswatch/repository/TeamRepository.class

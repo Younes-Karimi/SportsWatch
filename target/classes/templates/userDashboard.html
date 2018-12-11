@@ -49,24 +49,24 @@
             <p>Please choose your favorite teams from the navigation bar.</p>
         </div>
 
-        <!--<div th:if="${notifications} != null">-->
-            <!--<p th:each="msg : ${notifications}" th:text="${msg}"></p>-->
-        <!--</div>-->
-        <!--<div th:if="${userInfo.favoriteTeams} != null">-->
-            <!--<p>Your favorite teams:</p>-->
-            <!--<table class="table">-->
-                <!--<thead>-->
-                <!--<tr>-->
-                    <!--<th scope="col">Abbreviation</th>-->
-                    <!--<th scope="col">Full Name</th>-->
-                <!--</tr>-->
-                <!--</thead>-->
-                <!--<tr th:each="team,iterStat : ${userInfo.favoriteTeams}" >-->
-                    <!--<td th:text="${team.abbreviation}"></td>-->
-                    <!--<td th:text="${team.city} + ' ' + ${team.teamName}"></td>-->
-                <!--</tr>-->
-            <!--</table>-->
-        <!--</div>-->
+        <div th:if="${notifications} != null">
+            <p th:each="msg : ${notifications}" th:text="${msg}"></p>
+        </div>
+        <div th:if="${userInfo.favoriteTeams} != null">
+            <p>Your favorite teams:</p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Abbreviation</th>
+                    <th scope="col">Full Name</th>
+                </tr>
+                </thead>
+                <tr th:each="team,iterStat : ${userInfo.favoriteTeams}" >
+                    <td th:text="${team.abbreviation}"></td>
+                    <td th:text="${team.city} + ' ' + ${team.teamName}"></td>
+                </tr>
+            </table>
+        </div>
 
         <div th:insert="layout::scripts" />
     </body>
