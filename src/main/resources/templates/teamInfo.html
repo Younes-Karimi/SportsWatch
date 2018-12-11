@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html>
+    <head th:replace = "layout :: header"></head>
+
+    <body>
+        <div th:insert="layout::navbar-general" />
+        <div th:insert="layout::app-ad" />
+
+        <div>
+            <p Welcome to Sports Watch Web Application!/>
+        </div>
+        <div id="status"></div>
+
+        <div class="container">
+
+            <h1><b><i>Team: <span th:text="${teamDetails.teamName} +' (' + ${teamDetails.abbreviation} + ')'"></span></i></b></h1>
+            <h2><b><i>From: <span th:text="${teamDetails.city}"></span></i></b></h2>
+            <img th:src="@{'/img/teams/' + ${teamDetails.abbreviation} + '.png'}"/>
+
+            <div>
+                <p>Click the button below to add this team to your favorite teams</p>
+                <a class="btn btn-primary" th:href="@{~/addToFavorites?id=} + ${teamDetails.teamId}">Add to Favorites</a>
+            </div>
+
+            <h2>Schedules of games for the latest season</h2>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">Away Team</th>
+                </tr>
+                </thead>
+                <tr th:each="gameDetail,iterStat : ${gameDetails}" >
+                    <td th:text="${gameDetail.get('id')}" >  </td>
+                    <td th:text="${gameDetail.get('date')}" >  </td>
+                    <td th:text="${gameDetail.get('time')}" >  </td>
+                    <td th:text="${gameDetail.get('awayTeam')}" >  </td>
+                </tr>
+            </table>
+
+            <div>
+                <h2>Wins and Losses of this team</h2>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Record</th>
+                        <th scope="col">VS. Team</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Time</th>
+                    </tr>
+                    </thead>
+                    <tr th:each="gameDetail,iterStat : ${gameDetails}" >
+                        <td th:text="${gameDetail.get('Wins')} ? 'Win' : 'Loss'"></td>
+                        <td th:text="${gameDetail.get('awayTeam')}" > </td>
+                        <td th:text="${gameDetail.get('date')}" >  </td>
+                        <td th:text="${gameDetail.get('time')}" >  </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div th:insert="layout::scripts" />
+    </body>
+</html>

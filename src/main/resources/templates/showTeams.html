@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html>
+    <head th:replace = "layout :: header"></head>
+
+    <body>
+        <div th:insert="layout::navbar-general" />
+        <div th:insert="layout::app-ad" />
+
+        <div>
+            <p Welcome to Sports Watch Web Application!/>
+        </div>
+
+        <div id="status"></div>
+
+        <div class="container">
+            <h4>All NBA Teams:</h4>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Abbreviation</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">City</th>
+                </tr>
+                </thead>
+
+                <tr th:each="teamStandingEntry : ${teamStandingEntries}" >
+                    <td th:text="${teamStandingEntry.team.Abbreviation}" th:id="${teamStandingEntry.team.ID}">
+                    <td > <a th:href="@{~/team?id=} + ${teamStandingEntry.team.ID}" th:text="${teamStandingEntry.team.Name}"> </a> </td>
+                    <td th:text="${teamStandingEntry.team.City}">
+                </tr>
+            </table>
+        </div>
+
+        <div th:insert="layout::scripts" />
+    </body>
+</html>

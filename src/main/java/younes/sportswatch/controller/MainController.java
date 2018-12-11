@@ -60,7 +60,7 @@ public class MainController {
                 }
             }
         }
-        return new ModelAndView("admin-login");
+        return new ModelAndView("adminLogin");
     }
 
     @PostMapping("/adminLogin")
@@ -73,7 +73,7 @@ public class MainController {
         if(userRepository.findByEmail(email).isPresent()) {
             if (userRepository.findByEmail(email).get().getIsAdmin()) {
                 session.setAttribute("email", email);
-                return new ModelAndView("redirect:admin-dashboard");
+                return new ModelAndView("redirect:adminDashboard");
             }
         }
         String errorMessage = userName + " is not defined as an admin! You can login as a user.";
@@ -108,7 +108,7 @@ public class MainController {
                 return new ModelAndView("redirect:userDashboard");
             }
         }
-        return new ModelAndView("user-login");
+        return new ModelAndView("userLogin");
     }
 
     @PostMapping("/userLogin")
@@ -147,7 +147,7 @@ public class MainController {
             String currentUserEmail = session.getAttribute("email").toString();
             if (userRepository.findByEmail(currentUserEmail).isPresent()) {
                 User currentUser = userRepository.findByEmail(currentUserEmail).get();
-                ModelAndView userDashboard = new ModelAndView("user-dashboard");
+                ModelAndView userDashboard = new ModelAndView("userDashboard");
                 userDashboard.addObject("userInfo", currentUser);
                 if (getUserFavoriteTeams(currentUser.getFavoriteTeams()) != null) {
                     if (!getUserFavoriteTeams(currentUser.getFavoriteTeams()).isEmpty()) {
@@ -225,7 +225,7 @@ public class MainController {
             String currentUserEmail = session.getAttribute("email").toString();
             if (userRepository.findByEmail(currentUserEmail).isPresent()) {
                 if (userRepository.findByEmail(currentUserEmail).get().getIsAdmin()) {
-                    ModelAndView allUsers = new ModelAndView("admin-dashboard");
+                    ModelAndView allUsers = new ModelAndView("adminDashboard");
                     allUsers.addObject("allUsers", userRepository.findAll());
                     return allUsers;
                 }
@@ -261,7 +261,7 @@ public class MainController {
 
 		model.addAttribute("teams", teamRepository.findAll());
 		model.addAttribute("userId", 1);
-	    return "select-teams";
+	    return "selectTeams";
 	}
 
     @GetMapping("/selectFavoriteTeams")
@@ -269,8 +269,8 @@ public class MainController {
         if (session.getAttribute("email") != null) {
             String currentUserEmail = session.getAttribute("email").toString();
             if (userRepository.findByEmail(currentUserEmail).isPresent()) {
-                ModelAndView allTeams = new ModelAndView("select-favorite-teams");
-                allTeams.addObject("teams", teamRepository.findAll());
+                ModelAndView allTeams = new ModelAndView("selectFavoriteTeams");
+                allTeams.addObject("allTeams", teamRepository.findAll());
                 return allTeams;
             }
         }
@@ -365,7 +365,7 @@ public class MainController {
     //Using PoJo Classes
     @GetMapping("/teams")
     public ModelAndView getTeams() {
-        ModelAndView showTeams = new ModelAndView("show-teams");
+        ModelAndView showTeams = new ModelAndView("showTeams");
         showTeams.addObject("name", "Younes");
 
         //Endpoint to call
@@ -395,7 +395,7 @@ public class MainController {
     public ModelAndView getTeamInfo(
             @RequestParam("id") String teamID
     ) {
-        ModelAndView teamInfo = new ModelAndView("team-info");
+        ModelAndView teamInfo = new ModelAndView("teamInfo");
         ArrayList<HashMap<String, String>> gameDetails = fetchGameDetails(teamID);
         teamInfo.addObject("gameDetails", gameDetails);
         teamInfo.addObject("teamDetails", teamRepository.findByTeamId(Integer.parseInt(teamID)));

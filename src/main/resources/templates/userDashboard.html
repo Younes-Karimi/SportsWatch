@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html>
+    <head th:replace = "layout :: header"></head>
+        <title>User Dashboard</title>
+
+    <body>
+        <!--<div th:insert="layout::navbar-user" />-->
+        <div th:insert="layout::fb-logout" />
+        <!--#### User Navbar ####-->
+        <div th:fragment="navbar-user">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="/">
+                    <img src="img/logo.png" width="30" height="30" class="d-inline-block align-top" alt="Logo">
+                    Sports Watch
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="user-navbar">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/userDashboard">User Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/selectFavoriteTeams">Select Favorite Teams</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/teams">All Teams</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/scoreboard">Scoreboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/ranking">Ranking</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout" onclick="logout()">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <!--#### User Navbar End ####-->
+        <div th:insert="layout::app-ad" />
+        <div id="status"></div>
+
+        <h4>Welcome <b><span th:text="${userInfo.userName}"></span></b> to Sports Watch Web Application!</h4>
+        <div th:if="${userInfo.favoriteTeams} == null">
+            <p>Please choose your favorite teams from the navigation bar.</p>
+        </div>
+
+        <!--<div th:if="${notifications} != null">-->
+            <!--<p th:each="msg : ${notifications}" th:text="${msg}"></p>-->
+        <!--</div>-->
+        <!--<div th:if="${userInfo.favoriteTeams} != null">-->
+            <!--<p>Your favorite teams:</p>-->
+            <!--<table class="table">-->
+                <!--<thead>-->
+                <!--<tr>-->
+                    <!--<th scope="col">Abbreviation</th>-->
+                    <!--<th scope="col">Full Name</th>-->
+                <!--</tr>-->
+                <!--</thead>-->
+                <!--<tr th:each="team,iterStat : ${userInfo.favoriteTeams}" >-->
+                    <!--<td th:text="${team.abbreviation}"></td>-->
+                    <!--<td th:text="${team.city} + ' ' + ${team.teamName}"></td>-->
+                <!--</tr>-->
+            <!--</table>-->
+        <!--</div>-->
+
+        <div th:insert="layout::scripts" />
+    </body>
+</html>
