@@ -17,7 +17,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private int userId;
+    private Long userId;
     private String userName;
     private String email;
     private Boolean isBlocked;
@@ -26,7 +26,7 @@ public class User {
 
     public User(){}
 
-    public User(int userId, String userName, String email){
+    public User(Long userId, String userName, String email){
         this.userId = userId;
         this.userName = userName;
         this.email = email;

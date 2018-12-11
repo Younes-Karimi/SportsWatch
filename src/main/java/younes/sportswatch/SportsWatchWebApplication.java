@@ -73,18 +73,18 @@ public class SportsWatchWebApplication {
     }
 
     private void loadUsers(){
-        User admin1 = new User(0, "admin1", "admin1@gmail.com");
+        User admin1 = new User(0L, "admin1", "admin1@gmail.com");
         admin1.setIsAdmin(true);
         userRepository.save(admin1);
 
-        User admin2 = new User(1, "admin2", "admin2@gmail.com");
+        User admin2 = new User(1L, "admin2", "admin2@gmail.com");
         admin2.setIsAdmin(true);
         userRepository.save(admin2);
 
-        User user1 = new User(2, "user1", "user1@gmail.com");
+        User user1 = new User(2L, "user1", "user1@gmail.com");
         userRepository.save(user1);
 
-        User user2 = new User(2, "user2", "user2@gmail.com");
+        User user2 = new User(2L, "user2", "user2@gmail.com");
         userRepository.save(user2);
     }
 }

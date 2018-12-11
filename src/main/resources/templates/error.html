@@ -4,7 +4,6 @@
         <title>Error Page</title>
     <body th:with="httpStatus=${T(org.springframework.http.HttpStatus).valueOf(#response.status)}">
         <div th:insert="layout::navbar-general" />
-        <div th:insert="layout::fb-login"/>
         <div th:insert="layout::app-ad" />
 
         <div class="container">

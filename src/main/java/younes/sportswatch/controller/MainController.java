@@ -40,7 +40,7 @@ public class MainController {
 	private String tokenPass = "95aecd0b-7284-4bd4-8a0d-336b1f:I9t3kMuslj@9q8Rr";
 
     @GetMapping("/")
-    public String renderHomepage(Model model){
+    public String renderHomepage(HttpSession session, Model model){
         loadUsers();
         loadTeams();
         return "homepage";
@@ -50,20 +50,20 @@ public class MainController {
     //#### Access Control
     //#################################################//
 
-    @GetMapping("/admin-login")
+    @GetMapping("/adminLogin")
     public ModelAndView renderAdminLogin(HttpSession session) {
         if (session.getAttribute("email") != null) {
             String currentUserEmail = session.getAttribute("email").toString();
             if (userRepository.findByEmail(currentUserEmail).isPresent()) {
                 if (userRepository.findByEmail(currentUserEmail).get().getIsAdmin()) {
-                    return new ModelAndView("redirect:admin-dashboard");
+                    return new ModelAndView("redirect:adminDashboard");
                 }
             }
         }
-        return new ModelAndView("admin-login");
+        return new ModelAndView("adminLogin");
     }
 
-    @PostMapping("/admin-login")
+    @PostMapping("/adminLogin")
     public ModelAndView adminlogin(
             @RequestParam("userName") String userName,
             @RequestParam("email") String email,
@@ -88,36 +88,30 @@ public class MainController {
 
     @PostMapping("/register")
     public ModelAndView registerUser(
-            @RequestParam("userId") int userId,
+            @RequestParam("userId") Long userId,
             @RequestParam("userName") String userName,
             @RequestParam("email") String email
     ) {
-        System.out.println("registered!!!!!!!!!!!!111111");
         if (!userRepository.findByEmail(email).isPresent()) {
-            System.out.println("registered!!!!!!!!!!!!22222");
-
             User newUser = new User(userId, userName, email);
-            System.out.println("registered!!!!!!!!!!!!33333");
-
             userRepository.save(newUser);
-            return new ModelAndView("redirect:user-login");
         }
-        return new ModelAndView("redirect:user-login");
+        return new ModelAndView("redirect:userLogin");
     }
 
     // #### User Login ####
-    @GetMapping("/user-login")
+    @GetMapping("/userLogin")
     public ModelAndView renderUserLogin(HttpSession session) {
         if (session.getAttribute("email") != null) {
             String currentUserEmail = session.getAttribute("email").toString();
             if (userRepository.findByEmail(currentUserEmail).isPresent()) {
-                return new ModelAndView("redirect:user-dashboard");
+                return new ModelAndView("redirect:userDashboard");
             }
         }
         return new ModelAndView("user-login");
     }
 
-    @PostMapping("/user-login")
+    @PostMapping("/userLogin")
     public ModelAndView userLoginrequest(
             @RequestParam("email") String email,
             HttpSession session,
@@ -125,9 +119,8 @@ public class MainController {
     ) {
         if(userRepository.findByEmail(email).isPresent()) {
             session.setAttribute("email", email);
-            return new ModelAndView("redirect:user-dashboard");
+            return new ModelAndView("redirect:userDashboard");
         }
-        System.out.println("EEEEEEEEEEEEEE No email fetched!");
         String errorMessage = "You have not registered into Sports Watch. You have to register before login.";
         model.addAttribute("errorMessage", errorMessage);
         return new ModelAndView("error");
@@ -148,7 +141,7 @@ public class MainController {
     //#### Dashboards
     //#################################################//
 
-    @GetMapping("/user-dashboard")
+    @GetMapping("/userDashboard")
     public ModelAndView renderUserDashboard(HttpSession session, Model model) {
         if (session.getAttribute("email") != null) {
             String currentUserEmail = session.getAttribute("email").toString();
@@ -226,7 +219,7 @@ public class MainController {
         }
     }
 
-    @GetMapping("/admin-dashboard")
+    @GetMapping("/adminDashboard")
     public ModelAndView renderAdminDashboard(HttpSession session, Model model) {
         if (session.getAttribute("email") != null) {
             String currentUserEmail = session.getAttribute("email").toString();
@@ -243,7 +236,7 @@ public class MainController {
         return new ModelAndView("error");
     }
 
-    @GetMapping("/toggle-user-status")
+    @GetMapping("/toggleUserStatus")
     public ModelAndView toggleUserStatus(
             @RequestParam("email") String email
     ) {
@@ -252,7 +245,7 @@ public class MainController {
             user.setIsBlocked(!(user.getIsBlocked()));
             userRepository.save(user);
         }
-        return new ModelAndView("redirect:admin-dashboard");
+        return new ModelAndView("redirect:adminDashboard");
     }
 
     //#################################################//
@@ -263,7 +256,7 @@ public class MainController {
     //#### Favorite Teams
     //#################################################//
 
-	@GetMapping(path="/select-teams")
+	@GetMapping(path="/selectTeams")
 	public String selectFavoriteTeam(Model model){
 
 		model.addAttribute("teams", teamRepository.findAll());
@@ -271,7 +264,7 @@ public class MainController {
 	    return "select-teams";
 	}
 
-    @GetMapping("/select-favorite-teams")
+    @GetMapping("/selectFavoriteTeams")
     public ModelAndView fetchAllTeams(HttpSession session) {
         if (session.getAttribute("email") != null) {
             String currentUserEmail = session.getAttribute("email").toString();
@@ -281,10 +274,10 @@ public class MainController {
                 return allTeams;
             }
         }
-        return new ModelAndView("redirect:user-login");
+        return new ModelAndView("redirect:userLogin");
     }
 
-    @PostMapping("/select-favorite-teams")
+    @PostMapping("/selectFavoriteTeams")
     public ModelAndView addToFavorites(
             HttpSession session,
             @RequestParam String favoriteTeamsString,
@@ -307,7 +300,7 @@ public class MainController {
                 User user = userRepository.findByEmail(currentUserEmail).get();
                 user.setFavoriteTeams(favoriteTeams);
                 userRepository.save(user);
-                return new ModelAndView("redirect:user-dashboard");
+                return new ModelAndView("redirect:userDashboard");
             }
         }
         String errorMessage = "You have to login before choosing favorite teams!";
@@ -315,7 +308,7 @@ public class MainController {
         return new ModelAndView("error");
     }
 //
-//    @GetMapping("/add-to-favorites")
+//    @GetMapping("/addToFavorites")
 //    public ModelAndView addTeamToFavorites(
 //            @RequestParam("id") String teamID,
 //            HttpSession session, Model model
@@ -336,7 +329,7 @@ public class MainController {
 //                    currentUser.setFavoriteTeams(newFavTeams);
 //                    userRepository.save(currentUser);
 //                }
-//                return new ModelAndView("redirect:user-dashboard");
+//                return new ModelAndView("redirect:userDashboard");
 //            }
 //        }
 //        String errorMessage = "You have to login to be able to add a team to your favorites!";
@@ -570,7 +563,6 @@ public class MainController {
 
     //#### Add Dummy Data ####
     private void loadTeams(){
-        System.out.println("QQQQQQQQQQQQQQQQQQQLoading teams");
         String url ="https://api.mysportsfeeds.com/v1.2/pull/nba/2018-2019-regular/overall_team_standings.json";
         String encoding = Base64.getEncoder().encodeToString(tokenPass.getBytes());
         HttpHeaders headers = new HttpHeaders();
@@ -604,21 +596,21 @@ public class MainController {
     }
 
     private void loadUsers(){
-        User admin1 = new User(0, "admin1", "admin1@gmail.com");
+        User admin1 = new User(0L, "admin1", "admin1@gmail.com");
         admin1.setIsAdmin(true);
         userRepository.save(admin1);
 
-        User admin2 = new User(1, "admin2", "admin2@gmail.com");
+        User admin2 = new User(1L, "admin2", "admin2@gmail.com");
         admin2.setIsAdmin(true);
         userRepository.save(admin2);
 
-        User user1 = new User(2, "user1", "user1@gmail.com");
+        User user1 = new User(2L, "user1", "user1@gmail.com");
         userRepository.save(user1);
 
-        User user2 = new User(3, "user2", "user2@gmail.com");
+        User user2 = new User(3L, "user2", "user2@gmail.com");
         userRepository.save(user2);
 
-        User Younes = new User(4, "Younes", "uka.fbook@gmail.com");
+        User Younes = new User(4L, "Younes", "uka.fbook@gmail.com");
         userRepository.save(Younes);
     }
     //#### Add Dummy Data END ####

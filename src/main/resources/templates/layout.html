@@ -11,83 +11,52 @@
     </head>
 
     <body>
-
-        <!-- #### Facebook Login #### -->
-        <div th:fragment="fb-login">
+        <div th:fragment="fb-logout">
+            <!--#### Facebook Login start ####-->
             <script>
-              // This is called with the results from from FB.getLoginStatus().
-              function statusChangeCallback(response) {
-                console.log('statusChangeCallback');
-                console.log(response);
-                // The response object is returned with a status field that lets the
-                // app know the current login status of the person.
-                // Full docs on the response object can be found in the documentation
-                // for FB.getLoginStatus().
-                if (response.status === 'connected') {
-                  // Logged into your app and Facebook.
-                  testAPI();
-                } else {
-                  // The person is not logged into your app or we are unable to tell.
-                  document.getElementById('status').innerHTML = 'Please log ' +
-                    'into the app.';
+                window.fbAsyncInit = function() {
+                    FB.init({
+                        appId      : '269059697143413',
+                        cookie     : true,
+                        xfbml      : true,
+                        version    : 'v3.2'
+                    });
+                    FB.getLoginStatus(function(response) {statusChangeCallback(response);});
+                };
+
+                (function(d, s, id){
+                    var js, fjs = d.getElementsByTagName(s)[0];
+                    if (d.getElementById(id)) {return;}
+                    js = d.createElement(s); js.id = id;
+                    js.src = "https://connect.facebook.net/en_US/sdk.js";
+                    fjs.parentNode.insertBefore(js, fjs);
+                }(document, 'script', 'facebook-jssdk'));
+
+                function statusChangeCallback(response) {
+                    if(response.status === 'connected') {
+                        console.log(response);
+                        console.log('Logged in');
+                    } else {
+                    console.log('Not auth');
+                    }
                 }
-              }
 
-              // This function is called when someone finishes with the Login
-              // Button.  See the onlogin handler attached to it in the sample
-              // code below.
-              function checkLoginState() {
-                FB.getLoginStatus(function(response) {
-                  statusChangeCallback(response);
-                });
-              }
+                function checkLoginState() {
+                    FB.getLoginStatus(function(response) {
+                        statusChangeCallback(response);
+                 });
+                }
 
-              window.fbAsyncInit = function() {
-                FB.init({
-                  appId      : '269059697143413',
-                  cookie     : true,  // enable cookies to allow the server to access
-                                      // the session
-                  xfbml      : true,  // parse social plugins on this page
-                  version    : 'v3.2' // use graph api version 2.8
-                });
+                function logout() {
+                    FB.logout(function(response){
+                        $("#logoutCallback").submit();
+                    });
 
-                // Now that we've initialized the JavaScript SDK, we call
-                // FB.getLoginStatus().  This function gets the state of the
-                // person visiting this page and can return one of three states to
-                // the callback you provide.  They can be:
-                //
-                // 1. Logged into your app ('connected')
-                // 2. Logged into Facebook, but not your app ('not_authorized')
-                // 3. Not logged into Facebook and can't tell if they are logged into
-                //    your app or not.
-                //
-                // These three cases are handled in the callback function.
-
-                FB.getLoginStatus(function(response) {
-                  statusChangeCallback(response);
-                });
-              };
-
-              // Load the SDK asynchronously
-              (function(d, s, id) {
-                var js, fjs = d.getElementsByTagName(s)[0];
-                if (d.getElementById(id)) return;
-                js = d.createElement(s); js.id = id;
-                js.src = "https://connect.facebook.net/en_US/sdk.js";
-                fjs.parentNode.insertBefore(js, fjs);
-              }(document, 'script', 'facebook-jssdk'));
-
-              function testAPI() {
-                console.log('Welcome!  Fetching your information.... ');
-                FB.api('/me', function(response) {
-                  console.log('Successful login for: ' + response.name);
-                  document.getElementById('status').innerHTML =
-                    'Thanks for logging in, ' + response.name + '!';
-                });
-              }
+                }
             </script>
+            <!--#### Facebook login end ####-->
+            <form th:action="@{~/logout}" method="GET" id="logoutCallback"></form>
         </div>
-        <!-- #### Facebook Login End #### -->
 
         <!-- #### Navigation Bars #### -->
         <!--#### General Navbar (Not logged-in ###-->
@@ -115,19 +84,12 @@
                             <a class="nav-link" href="/register">Register</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/user-login">User Login</a>
+                            <a class="nav-link" href="/userLogin">User Login</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/admin-login">Admin Login</a>
+                            <a class="nav-link" href="/adminLogin">Admin Login</a>
                         </li>
                     </ul>
-                </div>
-                <div>
-                    <fb:login-button
-                            scope="public_profile,email"
-                            data-auto-logout-link="true"
-                            onlogin="checkLoginState();">
-                    </fb:login-button>
                 </div>
             </nav>
         </div>
@@ -145,10 +107,10 @@
                 <div class="collapse navbar-collapse" id="user-navbar">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
-                            <a class="nav-link" href="/user-dashboard">User Dashboard <span class="sr-only">(current)</span></a>
+                            <a class="nav-link" href="/userDashboard" th:href="@{/userDashboard}" th:if="${session.email != null}">User Dashboard <span class="sr-only">(current)</span></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/select-favorite-teams">Select Favorite Teams</a>
+                            <a class="nav-link" href="/selectFavoriteTeams">Select Favorite Teams</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/teams">All Teams</a>
@@ -160,15 +122,20 @@
                             <a class="nav-link" href="/ranking">Ranking</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/logout">Logout</a>
+                            <a class="nav-link" href="/logout" th:if="${session.email != null}" onclick="logout()">Logout</a>
                         </li>
+                        <!--<a class="btn btn-outline-primary" href="signup.html" th:href="@{/signup}" th:if="${session.userEmail == null}">Sign up</a>-->
+                        <!--<a class="btn btn-outline-primary" href="login.html" th:href="@{/login}" th:if="${session.userEmail == null}">Log in</a>-->
+                        <!--<a class="btn btn-outline-primary" href="adminlogin.html" th:href="@{/adminlogin}" th:if="${session.userEmail == null}">Admin Log in</a>-->
+                        <!--<a class="btn btn-outline-primary" th:if="${session.userEmail != null}" onclick="logout()">Log out</a>-->
+
                     </ul>
                 </div>
-                <div>
-                    <fb:login-button
-                            scope="public_profile,email" onlogin="checkLoginState();">
-                    </fb:login-button>
-                </div>
+                <!--<div>-->
+                    <!--<fb:login-button-->
+                            <!--scope="public_profile,email" onlogin="checkLoginState();">-->
+                    <!--</fb:login-button>-->
+                <!--</div>-->
             </nav>
         </div>
         <!--#### User Navbar End ####-->
@@ -185,7 +152,7 @@
                 <div class="collapse navbar-collapse" id="admin-navbar">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
-                            <a class="nav-link" href="/admin-dashboard">Admin Dashboard <span class="sr-only">(current)</span></a>
+                            <a class="nav-link" href="/adminDashboard">Admin Dashboard <span class="sr-only">(current)</span></a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/teams">All Teams</a>
@@ -200,11 +167,6 @@
                             <a class="nav-link" href="/logout">Logout</a>
                         </li>
                     </ul>
-                </div>
-                <div>
-                    <fb:login-button
-                            scope="public_profile,email" onlogin="checkLoginState();">
-                    </fb:login-button>
                 </div>
             </nav>
         </div>
