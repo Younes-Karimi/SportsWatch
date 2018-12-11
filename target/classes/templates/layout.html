@@ -88,7 +88,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/adminLogin">Admin Login</a>
-                        </li>
+
                     </ul>
                 </div>
             </nav>
@@ -107,7 +107,7 @@
                 <div class="collapse navbar-collapse" id="user-navbar">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
-                            <a class="nav-link" href="/userDashboard" th:href="@{/userDashboard}" th:if="${session.email != null}">User Dashboard <span class="sr-only">(current)</span></a>
+                            <a class="nav-link" href="/userDashboard">User Dashboard</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/selectFavoriteTeams">Select Favorite Teams</a>
@@ -122,13 +122,8 @@
                             <a class="nav-link" href="/ranking">Ranking</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/logout" th:if="${session.email != null}" onclick="logout()">Logout</a>
+                            <a class="nav-link" href="/logout" onclick="logout()">Logout</a>
                         </li>
-                        <!--<a class="btn btn-outline-primary" href="signup.html" th:href="@{/signup}" th:if="${session.userEmail == null}">Sign up</a>-->
-                        <!--<a class="btn btn-outline-primary" href="login.html" th:href="@{/login}" th:if="${session.userEmail == null}">Log in</a>-->
-                        <!--<a class="btn btn-outline-primary" href="adminlogin.html" th:href="@{/adminlogin}" th:if="${session.userEmail == null}">Admin Log in</a>-->
-                        <!--<a class="btn btn-outline-primary" th:if="${session.userEmail != null}" onclick="logout()">Log out</a>-->
-
                     </ul>
                 </div>
                 <!--<div>-->
@@ -152,7 +147,7 @@
                 <div class="collapse navbar-collapse" id="admin-navbar">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
-                            <a class="nav-link" href="/adminDashboard">Admin Dashboard <span class="sr-only">(current)</span></a>
+                            <a class="nav-link" href="/adminDashboard">Admin Dashboard</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/teams">All Teams</a>
@@ -164,7 +159,7 @@
                             <a class="nav-link" href="/ranking">Ranking</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/logout">Logout</a>
+                            <a class="nav-link" href="/logout" onclick="logout()">Logout</a>
                         </li>
                     </ul>
                 </div>

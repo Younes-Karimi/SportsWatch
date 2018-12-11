@@ -19,7 +19,7 @@
                 <div class="collapse navbar-collapse" id="user-navbar">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
-                            <a class="nav-link" href="/userDashboard" th:href="@{/userDashboard}" th:if="${session.email != null}">User Dashboard <span class="sr-only">(current)</span></a>
+                            <a class="nav-link" href="/userDashboard">User Dashboard</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/selectFavoriteTeams">Select Favorite Teams</a>
@@ -34,7 +34,7 @@
                             <a class="nav-link" href="/ranking">Ranking</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/logout" th:if="${session.email != null}" onclick="logout()">Logout</a>
+                            <a class="nav-link" href="/logout" onclick="logout()">Logout</a>
                         </li>
                     </ul>
                 </div>
@@ -44,29 +44,29 @@
         <div th:insert="layout::app-ad" />
         <div id="status"></div>
 
-        <h4>Welcome <span th:text="${userInfo.userName}"></span> to Sports Watch Web Application!</h4>
+        <h4>Welcome <b><span th:text="${userInfo.userName}"></span></b> to Sports Watch Web Application!</h4>
         <div th:if="${userInfo.favoriteTeams} == null">
             <p>Please choose your favorite teams from the navigation bar.</p>
         </div>
 
-        <div th:if="${notifications} != null">
-            <p th:each="msg : ${notifications}" th:text="${msg}"></p>
-        </div>
-        <div th:if="${userInfo.favoriteTeams} != null">
-            <p>Your favorite teams:</p>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th scope="col">Abbreviation</th>
-                    <th scope="col">Full Name</th>
-                </tr>
-                </thead>
-                <tr th:each="team,iterStat : ${userInfo.favoriteTeams}" >
-                    <td th:text="${team.abbreviation}"></td>
-                    <td th:text="${team.city} + ' ' + ${team.teamName}"></td>
-                </tr>
-            </table>
-        </div>
+        <!--<div th:if="${notifications} != null">-->
+            <!--<p th:each="msg : ${notifications}" th:text="${msg}"></p>-->
+        <!--</div>-->
+        <!--<div th:if="${userInfo.favoriteTeams} != null">-->
+            <!--<p>Your favorite teams:</p>-->
+            <!--<table class="table">-->
+                <!--<thead>-->
+                <!--<tr>-->
+                    <!--<th scope="col">Abbreviation</th>-->
+                    <!--<th scope="col">Full Name</th>-->
+                <!--</tr>-->
+                <!--</thead>-->
+                <!--<tr th:each="team,iterStat : ${userInfo.favoriteTeams}" >-->
+                    <!--<td th:text="${team.abbreviation}"></td>-->
+                    <!--<td th:text="${team.city} + ' ' + ${team.teamName}"></td>-->
+                <!--</tr>-->
+            <!--</table>-->
+        <!--</div>-->
 
         <div th:insert="layout::scripts" />
     </body>

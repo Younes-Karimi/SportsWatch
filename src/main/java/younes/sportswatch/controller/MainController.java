@@ -60,7 +60,7 @@ public class MainController {
                 }
             }
         }
-        return new ModelAndView("adminLogin");
+        return new ModelAndView("admin-login");
     }
 
     @PostMapping("/adminLogin")
@@ -161,7 +161,7 @@ public class MainController {
                             }
                         }
                         userDashboard.addObject("notifications", notifications);
-//                        userDashboard.addObject("favoriteTeams", favoriteTeams);
+                        userDashboard.addObject("favoriteTeams", favoriteTeams);
                     }
                 }
                 return userDashboard;
@@ -283,9 +283,9 @@ public class MainController {
             @RequestParam String favoriteTeamsString,
             Model model
     ) {
-        String splittedTeams[] = favoriteTeamsString.split(",");
+        String splitTeams[] = favoriteTeamsString.split(",");
         ArrayList<Integer> favoriteTeams = new ArrayList<>();
-        for (String str: splittedTeams) {
+        for (String str: splitTeams) {
             favoriteTeams.add(Integer.parseInt(str));
         }
         if (favoriteTeams.isEmpty() == false) {
@@ -308,35 +308,35 @@ public class MainController {
         return new ModelAndView("error");
     }
 //
-//    @GetMapping("/addToFavorites")
-//    public ModelAndView addTeamToFavorites(
-//            @RequestParam("id") String teamID,
-//            HttpSession session, Model model
-//    ) {
-//        if (session.getAttribute("email") != null) {
-//            String currentUserEmail = session.getAttribute("email").toString();
-//            if (userRepository.findByEmail(currentUserEmail).isPresent()) {
-//                User currentUser = userRepository.findByEmail(currentUserEmail).get();
-//                if (currentUser.getFavoriteTeams() != null) {
-//                    ArrayList<Integer> oldFavTeams = currentUser.getFavoriteTeams();
-//                    loadWinsAndLosses(Integer.parseInt(teamID));
-//                    oldFavTeams.add(Integer.parseInt(teamID));
-//                    currentUser.setFavoriteTeams(oldFavTeams);
-//                    userRepository.save(currentUser);
-//                } else {
-//                    ArrayList<Integer> newFavTeams = new ArrayList<>();
-//                    newFavTeams.add(Integer.parseInt(teamID));
-//                    currentUser.setFavoriteTeams(newFavTeams);
-//                    userRepository.save(currentUser);
-//                }
-//                return new ModelAndView("redirect:userDashboard");
-//            }
-//        }
-//        String errorMessage = "You have to login to be able to add a team to your favorites!";
-//        model.addAttribute("errorMessage", errorMessage);
-//        return new ModelAndView("error");
-//    }
-//
+    @GetMapping("/addToFavorites")
+    public ModelAndView addTeamToFavorites(
+            @RequestParam("id") String teamID,
+            HttpSession session, Model model
+    ) {
+        if (session.getAttribute("email") != null) {
+            String currentUserEmail = session.getAttribute("email").toString();
+            if (userRepository.findByEmail(currentUserEmail).isPresent()) {
+                User currentUser = userRepository.findByEmail(currentUserEmail).get();
+                if (currentUser.getFavoriteTeams() != null) {
+                    ArrayList<Integer> oldFavTeams = currentUser.getFavoriteTeams();
+                    setNumOfWinsAndLosses(Integer.parseInt(teamID));
+                    oldFavTeams.add(Integer.parseInt(teamID));
+                    currentUser.setFavoriteTeams(oldFavTeams);
+                    userRepository.save(currentUser);
+                } else {
+                    ArrayList<Integer> newFavTeams = new ArrayList<>();
+                    newFavTeams.add(Integer.parseInt(teamID));
+                    currentUser.setFavoriteTeams(newFavTeams);
+                    userRepository.save(currentUser);
+                }
+                return new ModelAndView("redirect:userDashboard");
+            }
+        }
+        String errorMessage = "You have to login to be able to add a team to your favorites!";
+        model.addAttribute("errorMessage", errorMessage);
+        return new ModelAndView("error");
+    }
+
     private void setNumOfWinsAndLosses(int teamId) {
         Team team = teamRepository.findByTeamId(teamId);
         ArrayList<HashMap<String, String>> gameDetails = fetchGameDetails(team.getTeamId().toString());
@@ -418,9 +418,6 @@ public class MainController {
         ObjectMapper mapper = new ObjectMapper();
         try {
             JsonNode root = mapper.readTree(str);
-//            System.out.println(str);
-//            System.out.println(root.get("teamgamelogs").get("lastUpdatedOn").asText());
-//            System.out.println(root.get("teamgamelogs").get("gamelogs").getNodeType());
             JsonNode gamelogs = root.get("teamgamelogs").get("gamelogs");
 
             if(gamelogs.isArray()) {
@@ -596,21 +593,24 @@ public class MainController {
     }
 
     private void loadUsers(){
-        User admin1 = new User(0L, "admin1", "admin1@gmail.com");
+        User admin1 = new User(101942267522225L, "Maria Alcaaiceeejgg Seligsteinberg", "qzbdufdjjw_1544498619@tfbnw.net");
         admin1.setIsAdmin(true);
         userRepository.save(admin1);
 
-        User admin2 = new User(1L, "admin2", "admin2@gmail.com");
+        User admin2 = new User(104399223940474L, "Rick Alcaaaahiifcj Narayananson", "frfrgghmdh_1544498608@tfbnw.net");
         admin2.setIsAdmin(true);
         userRepository.save(admin2);
 
-        User user1 = new User(2L, "user1", "user1@gmail.com");
+        User user1 = new User(110026253372652L, "Daniel Alcjiehcdjdjc Smithman", "zyhoknnyeu_1544498614@tfbnw.net");
         userRepository.save(user1);
 
-        User user2 = new User(3L, "user2", "user2@gmail.com");
+        User user2 = new User(112942529745642L, "Karen Alcjhifhgbdei Vijayvergiyason", "qltxqkpxwo_1544498625@tfbnw.net");
         userRepository.save(user2);
 
-        User Younes = new User(4L, "Younes", "uka.fbook@gmail.com");
+        User user3 = new User(120373335655706L, "Open Graph Test User", "open_jhjaasq_user@tfbnw.net");
+        userRepository.save(user3);
+
+        User Younes = new User(1L, "Younes Karimi", "uka.fbook@gmail.com");
         userRepository.save(Younes);
     }
     //#### Add Dummy Data END ####
